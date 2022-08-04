@@ -1,8 +1,9 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Workout = require("../models/workout");
 
 //get all workouts:
-module.exports.getAllWorkout = async (req, res) => {
+module.exports.getAllWorkouts = async (req, res) => {
   const workouts = await Workout.find().sort({ createdAt: -1 });
 
   if (!workouts) {
@@ -17,11 +18,18 @@ module.exports.getAllWorkout = async (req, res) => {
 };
 
 //get a single workout:
-module.exports.getAllWorkout = async (req, res) => {
+module.exports.getWorkout = async (req, res) => {
   //get the id through by params;
-  const id = req.params.id;
-  const workout = await Workout.findById({ _id: id });
+  const { id } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({
+      error: "No such Workout id!",
+    });
+  }
+
+  //getting the workout:
+  const workout = await Workout.findById({ _id: id });
   if (!workout) {
     res.status(404).json({
       error: "No such workout!",
