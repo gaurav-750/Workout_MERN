@@ -1,9 +1,15 @@
 const express = require("express");
+const cors = require("cors");
 
 require("dotenv").config();
 const app = express();
 
 //middleware:
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use("/api", require("./routes/index"));
 
